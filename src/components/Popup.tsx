@@ -2,37 +2,74 @@ import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { Button, ThemeButton } from './Button';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-export const LoginSignInPopup = () => {
+export type Mode = 'login' | 'registration';
+
+export const LoginSignInPopup = ({
+	mode,
+	onClose,
+}: {
+	mode: Mode;
+	onClose: () => void;
+}) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordType, setPasswordType] = useState('password');
 
-	const changePassworVisibility = () => {
+	const changePasswordVisibility = () => {
 		setPasswordVisibility(!passwordVisibility);
-
-		passwordType === 'password'
-			? setPasswordType('text')
-			: setPasswordType('password');
+		setPasswordType(passwordType === 'password' ? 'text' : 'password');
 	};
 
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-
 		const formData = new FormData(event.currentTarget);
-		const response = await fetch('/api/submit', {
-			method: 'POST',
-			body: formData,
-		});
 
-		const data = await response.json();
+		if (mode === 'registration') {
+			// Обработка данных для регистрации
+		} else {
+			// Обработка данных для входа
+		}
 	}
 
+	const handlePopupClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (e.target === e.currentTarget) {
+			onClose();
+		}
+	};
+
 	return (
-		<div className="z-40 fixed w-full h-full bg-black/80 top-0 left-0 ">
-			<div className="mt-11 mx-auto max-w-[375px] min-h-[594px]  pt-6 px-4 purpleGradient popupRadius mix-blend-screen">
-				<div className="absolute bg-logo w-full h-full bg-no-repeat cover mix-blend-screen px-2 "></div>
-				<div className="text-white px-1  relative">
-					<h2 className="h2 text-2xl text-center pt-[30px]">Логин</h2>
+		<div
+			className="z-10 fixed w-full h-full bg-black/90 top-0 left-0"
+			onClick={handlePopupClick}
+		>
+			<motion.div
+				initial={{ scale: 0 }}
+				animate={{ rotate: 360, scale: 1 }}
+				transition={{
+					type: 'spring',
+					stiffness: 260,
+					damping: 20,
+				}}
+				className="mt-11 m-auto max-w-[375px] pt-6 pb-14 px-4 purpleGradient popupRadius"
+			>
+				<div
+					className="absolute h-[38px] w-[38px] -right-1 -top-1 bg-[#FFC543] rounded-full cursor-pointer"
+					onClick={handlePopupClick}
+				>
+					<Image
+						src={'/close.svg'}
+						alt={'close button'}
+						width={15}
+						height={15}
+						className="absolute top-1/2 transform -translate-y-1/2 translate-x-1/2 right-1/2"
+					/>
+				</div>
+				<div className="absolute bg-logo w-full h-full bg-no-repeat cover mix-blend-screen px-2"></div>
+				<div className="text-white px-1 relative">
+					<h2 className="h2 text-2xl text-center pt-[30px]">
+						{mode === 'registration' ? 'Регистрация' : 'Логин'}
+					</h2>
 
 					<form onSubmit={onSubmit}>
 						<div className="flex flex-col mt-8 gap-4 px-3 mb-6">
@@ -62,7 +99,7 @@ export const LoginSignInPopup = () => {
 									/>
 									<div
 										className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
-										onClick={changePassworVisibility}
+										onClick={changePasswordVisibility}
 									>
 										{!passwordVisibility && (
 											<Image
@@ -83,6 +120,20 @@ export const LoginSignInPopup = () => {
 									</div>
 								</div>
 							</label>
+
+							{mode === 'registration' && (
+								<label htmlFor="confirmPassword">
+									<span className="max-sm:text-[14px] font-bold pl-1">
+										Подтвердите пароль
+									</span>
+									<input
+										id="confirmPassword"
+										type="password"
+										placeholder="Подтвердите пароль"
+										className="w-full text-black max-2-[293px] text-[14px] authInput passwordInput pl-[57px]"
+									/>
+								</label>
+							)}
 
 							<Link
 								href={''}
@@ -112,16 +163,18 @@ export const LoginSignInPopup = () => {
 							</div>
 						</div>
 
-						<div className="">
-							<Button
-								type="submit"
-								value="Войти"
-								backgroundColor={ThemeButton.LIGHT}
-							/>
-						</div>
+						<Button
+							type="submit"
+							value={
+								mode === 'registration'
+									? 'Зарегистрироваться'
+									: 'Войти'
+							}
+							backgroundColor={ThemeButton.LIGHT}
+						/>
 					</form>
 				</div>
-			</div>
+			</motion.div>
 		</div>
 	);
 };

@@ -21,7 +21,7 @@ const Nav = () => {
 	const pathname = router.pathname;
 
 	return (
-		<nav className="flex flex-row justify-between gap-y-4 fixed h-max top-0 left-0 bottom-0 mt-auto z-30 w-full">
+		<nav className="flex flex-row justify-between gap-y-4 fixed h-max top-0 left-0 bottom-0 mt-auto w-full">
 			<div className="flex w-full xl:w-screen items-center justify-between px-4 md:px-40 h-[70px] xl:h-max py-7  rounded-t-[10px] text-3xl xl:text-xl linerGradient">
 				{navData.map((link, index) => {
 					return (
