@@ -53,9 +53,10 @@ export const LoginSignInPopup = ({
 				}}
 				className="mt-11 m-auto max-w-[375px] pt-6 pb-14 px-4 purpleGradient popupRadius"
 			>
-				<div
-					className="absolute h-[38px] w-[38px] -right-1 -top-1 bg-[#FFC543] rounded-full cursor-pointer"
-					onClick={handlePopupClick}
+				<motion.div
+					whileHover={{ scale: 1.2, rotate: 180 }}
+					className="absolute h-[38px] w-[38px] -right-1 -top-1 bg-[#FFC543] rounded-full cursor-pointer "
+					onClick={onClose}
 				>
 					<Image
 						src={'/close.svg'}
@@ -64,7 +65,7 @@ export const LoginSignInPopup = ({
 						height={15}
 						className="absolute top-1/2 transform -translate-y-1/2 translate-x-1/2 right-1/2"
 					/>
-				</div>
+				</motion.div>
 				<div className="absolute bg-logo w-full h-full bg-no-repeat cover mix-blend-screen px-2"></div>
 				<div className="text-white px-1 relative">
 					<h2 className="h2 text-2xl text-center pt-[30px]">
