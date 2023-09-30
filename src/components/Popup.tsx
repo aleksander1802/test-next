@@ -14,11 +14,18 @@ export const LoginSignInPopup = ({
 	onClose: () => void;
 }) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
+	const [passwordConfirmVisibility, setPasswordConfirmVisibility] = useState(false);
 	const [passwordType, setPasswordType] = useState('password');
+	const [passwordConfirmType, setPasswordConfirmType] = useState('password');
 
 	const changePasswordVisibility = () => {
 		setPasswordVisibility(!passwordVisibility);
 		setPasswordType(passwordType === 'password' ? 'text' : 'password');
+	};
+
+	const changePassworConfirmVisibility = () => {
+		setPasswordConfirmVisibility(!passwordConfirmVisibility);
+		setPasswordConfirmType(passwordConfirmType === 'password' ? 'text' : 'password');
 	};
 
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -51,7 +58,7 @@ export const LoginSignInPopup = ({
 					stiffness: 260,
 					damping: 20,
 				}}
-				className="mt-11 m-auto max-w-[375px] pt-6 pb-14 px-4 purpleGradient popupRadius"
+				className="mt-11 mx-auto max-w-[375px] pt-6 pb-14 px-4 purpleGradient popupRadius"
 			>
 				<motion.div
 					whileHover={{ scale: 1.2, rotate: 180 }}
@@ -95,7 +102,7 @@ export const LoginSignInPopup = ({
 									<input
 										id="userPassword"
 										type={passwordType}
-										placeholder="********"
+										placeholder="Введите пароль"
 										className="w-full text-black max-2-[293px] text-[14px] authInput passwordInput pl-[57px] "
 									/>
 									<div
@@ -127,12 +134,36 @@ export const LoginSignInPopup = ({
 									<span className="max-sm:text-[14px] font-bold pl-1">
 										Подтвердите пароль
 									</span>
+									<div className="relative">
+
 									<input
 										id="confirmPassword"
-										type="password"
+										type={passwordConfirmType}
 										placeholder="Подтвердите пароль"
 										className="w-full text-black max-2-[293px] text-[14px] authInput passwordInput pl-[57px]"
 									/>
+									<div
+										className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
+										onClick={changePassworConfirmVisibility}
+									>
+										{!passwordConfirmVisibility && (
+											<Image
+												alt={'visible'}
+												src={'/visible.svg'}
+												width={18}
+												height={15}
+											/>
+										)}
+										{passwordConfirmVisibility && (
+											<Image
+												alt={'visible'}
+												src={'/notvisible.svg'}
+												width={20}
+												height={15}
+											/>
+										)}
+									</div>
+									</div>
 								</label>
 							)}
 
