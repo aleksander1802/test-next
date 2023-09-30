@@ -6,29 +6,42 @@ import { motion } from 'framer-motion';
 
 export type Mode = 'login' | 'registration';
 
-export const LoginSignInPopup = ({
-	mode,
-	onClose,
-}: {
+const CLOSE_IMAGE_SRC = '/close.svg';
+const VISIBLE_IMAGE_SRC = '/visible.svg';
+const NOT_VISIBLE_IMAGE_SRC = '/notvisible.svg';
+
+interface PasswordState {
+	visibility: boolean;
+	type: 'password' | 'text';
+}
+
+interface ILoginSignIn {
 	mode: Mode;
 	onClose: () => void;
-}) => {
-	const [passwordVisibility, setPasswordVisibility] = useState(false);
-	const [passwordConfirmVisibility, setPasswordConfirmVisibility] = useState(false);
-	const [passwordType, setPasswordType] = useState('password');
-	const [passwordConfirmType, setPasswordConfirmType] = useState('password');
+}
 
-	const changePasswordVisibility = () => {
-		setPasswordVisibility(!passwordVisibility);
-		setPasswordType(passwordType === 'password' ? 'text' : 'password');
+const initialPasswordState: PasswordState = {
+	visibility: false,
+	type: 'password',
+};
+
+export const LoginSignInPopup = ({ mode, onClose }: ILoginSignIn) => {
+	const [password, setPassword] =
+		useState<PasswordState>(initialPasswordState);
+	const [passwordConfirm, setPasswordConfirm] =
+		useState<PasswordState>(initialPasswordState);
+
+	const togglePasswordVisibility = (
+		passwordState: PasswordState,
+		setPasswordState: React.Dispatch<React.SetStateAction<PasswordState>>,
+	) => {
+		setPasswordState({
+			visibility: !passwordState.visibility,
+			type: passwordState.type === 'password' ? 'text' : 'password',
+		});
 	};
 
-	const changePassworConfirmVisibility = () => {
-		setPasswordConfirmVisibility(!passwordConfirmVisibility);
-		setPasswordConfirmType(passwordConfirmType === 'password' ? 'text' : 'password');
-	};
-
-	async function onSubmit(event: FormEvent<HTMLFormElement>) {
+	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
 
@@ -37,7 +50,7 @@ export const LoginSignInPopup = ({
 		} else {
 			// Обработка данных для входа
 		}
-	}
+	};
 
 	const handlePopupClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (e.target === e.currentTarget) {
@@ -66,7 +79,7 @@ export const LoginSignInPopup = ({
 					onClick={onClose}
 				>
 					<Image
-						src={'/close.svg'}
+						src={CLOSE_IMAGE_SRC}
 						alt={'close button'}
 						width={15}
 						height={15}
@@ -101,26 +114,31 @@ export const LoginSignInPopup = ({
 								<div className="relative">
 									<input
 										id="userPassword"
-										type={passwordType}
+										type={password.type}
 										placeholder="Введите пароль"
 										className="w-full text-black max-2-[293px] text-[14px] authInput passwordInput pl-[57px] "
 									/>
 									<div
 										className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
-										onClick={changePasswordVisibility}
+										onClick={() =>
+											togglePasswordVisibility(
+												password,
+												setPassword,
+											)
+										}
 									>
-										{!passwordVisibility && (
+										{!password.visibility && (
 											<Image
 												alt={'visible'}
-												src={'/visible.svg'}
+												src={VISIBLE_IMAGE_SRC}
 												width={18}
 												height={15}
 											/>
 										)}
-										{passwordVisibility && (
+										{password.visibility && (
 											<Image
 												alt={'visible'}
-												src={'/notvisible.svg'}
+												src={NOT_VISIBLE_IMAGE_SRC}
 												width={20}
 												height={15}
 											/>
@@ -135,34 +153,38 @@ export const LoginSignInPopup = ({
 										Подтвердите пароль
 									</span>
 									<div className="relative">
-
-									<input
-										id="confirmPassword"
-										type={passwordConfirmType}
-										placeholder="Подтвердите пароль"
-										className="w-full text-black max-2-[293px] text-[14px] authInput passwordInput pl-[57px]"
-									/>
-									<div
-										className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
-										onClick={changePassworConfirmVisibility}
-									>
-										{!passwordConfirmVisibility && (
-											<Image
-												alt={'visible'}
-												src={'/visible.svg'}
-												width={18}
-												height={15}
-											/>
-										)}
-										{passwordConfirmVisibility && (
-											<Image
-												alt={'visible'}
-												src={'/notvisible.svg'}
-												width={20}
-												height={15}
-											/>
-										)}
-									</div>
+										<input
+											id="confirmPassword"
+											type={passwordConfirm.type}
+											placeholder="Подтвердите пароль"
+											className="w-full text-black max-2-[293px] text-[14px] authInput passwordInput pl-[57px]"
+										/>
+										<div
+											className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
+											onClick={() =>
+												togglePasswordVisibility(
+													passwordConfirm,
+													setPasswordConfirm,
+												)
+											}
+										>
+											{!passwordConfirm.visibility && (
+												<Image
+													alt={'visible'}
+													src={VISIBLE_IMAGE_SRC}
+													width={18}
+													height={15}
+												/>
+											)}
+											{passwordConfirm.visibility && (
+												<Image
+													alt={'visible'}
+													src={NOT_VISIBLE_IMAGE_SRC}
+													width={20}
+													height={15}
+												/>
+											)}
+										</div>
 									</div>
 								</label>
 							)}
